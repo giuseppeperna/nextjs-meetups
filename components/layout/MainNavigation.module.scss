@@ -22,24 +22,15 @@
     }
     li {
         margin-left: 3rem;
-    }
-    .link {
-        text-decoration: none;
-        font-size: 1.5rem;
-        color: $btn-hover;
-    }
-
-    a:hover,
-    a:active,
-    a.active {
-        color: white;
-    }
-
-    .badge {
-        background-color: $background-accent-color;
-        color: white;
-        border-radius: 12px;
-        padding: 0 1rem;
-        margin-left: 0.5rem;
+        a {
+            text-decoration: none;
+            font-size: 1.5rem;
+            color: $btn-hover;
+            &:hover,
+            &:active,
+            &.active {
+                color: white;
+            }
+        }
     }
 }
