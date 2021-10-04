@@ -37,10 +37,29 @@ export async function getStaticProps() {
     // You always need to return an object.
     return {
         props: { // this naming is crucial
-            // This becomes the props available in this component after the building process
+            // This becomes the props available in this component after the building process.
             meetups: DUMMY_MEETUPS
-        }
+        },
+        // Incremental Static Generation. Number of seconds before the page is regenerated on the server,
+        // at least if there are requests on this page.
+        revalidate: 1
     }
 }
+
+/**
+ * Page is pre-generated server side for each incoming requests.
+ * Access to the incoming requests.
+ * Useful if data change often or you need access to requests (e.g. check login session and auth).
+ */
+// export async function getServerSideProps(context) {
+//     const req = context.req;
+//     const res = context.res;
+//
+//     return {
+//         props: {
+//             meetups: DUMMY_MEETUPS
+//         }
+//     }
+// }
 
 export default HomePage;
