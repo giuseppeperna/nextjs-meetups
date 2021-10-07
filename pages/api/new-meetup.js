@@ -10,7 +10,8 @@ async function handler(req, res) {
         const data = req.body;
 
         // Connect to MongoDB
-        const client = await MongoClient.connect('mongodb+srv://admin:root@cluster0.oh6ra.mongodb.net/meetups?retryWrites=true&w=majority');
+        const urlConnection = process.env.MongoDB
+        const client = await MongoClient.connect(urlConnection);
         const db = client.db();
 
         const meetupsCollections = db.collection('meetups');
