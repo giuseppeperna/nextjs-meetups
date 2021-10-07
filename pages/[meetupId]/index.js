@@ -36,8 +36,11 @@ export async function getStaticPaths() {
 
     return {
         // if false, pre-generate only pages in paths array
-        // else try to pre-generate for every page-
-        fallback: false,
+        // else try to pre-generate for every page.
+        // Blocking indicates that this list of id might not be exhaustive,
+        // so, it will not respond with a 404 error, because it pre-generates the page
+        // before showing it in the client.
+        fallback: 'blocking',
         // Array of paths to be pre-generated
         paths: meetups.map(meetup => (
             {
