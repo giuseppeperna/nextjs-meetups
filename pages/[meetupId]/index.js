@@ -1,3 +1,4 @@
+import { MongoClient, ObjectId } from 'mongodb';
 import MeetupDetail from '../../components/meetups/MeetupDetail';
 
 function MeetupDetails(props) {
@@ -13,38 +14,50 @@ function MeetupDetails(props) {
 
 // Nextjs needs to know for which id should pre-generate the page
 export async function getStaticPaths() {
+    //MongoDB
+    const urlConnection = process.env.MongoDB;
+    const client = await MongoClient.connect(urlConnection);
+    const db = client.db();
+    const meetupsCollection = db.collection('meetups');
+    // Fetch only the IDs
+    const meetups = await meetupsCollection.find({}, {_id: 1 }).toArray();
+    client.close();
+
     return {
         // if false, pre-generate only pages in paths array
         // else try to pre-generate for every page-
         fallback: false,
         // Array of paths to be pre-generated
-        paths: [
+        paths: meetups.map(meetup => (
             {
-                params: {
-                meetupId: 'm1',
-                },
-            },
-            {
-                params: {
-                    meetupId: 'm2',
-                },
-            },
-        ]
+                params: { meetupId : meetup._id.toString() }
+            })
+        )
     }
 }
 
 export async function getStaticProps(context) {
     const meetupId = context.params.meetupId;
+    //MongoDB
+    const urlConnection = process.env.MongoDB;
+    const client = await MongoClient.connect(urlConnection);
+    const db = client.db();
+    const meetupsCollection = db.collection('meetups');
+    // Fetch only the IDs
+    const selectedMeetup = await meetupsCollection.findOne({
+        _id: ObjectId(meetupId),
+    });
+    client.close();
+
     return {
         props: {
             meetupData: {
-                id: meetupId,
-                image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Stadtbild_M%C3%BCnchen.jpg/2560px-Stadtbild_M%C3%BCnchen.jpg',
-                title: 'A First Meetup',
-                address: 'Some Street 10, Some City',
-                description: 'The meetup description'
-            },
-            revalidate: 10
+                id: selectedMeetup._id.toString(),
+                image: selectedMeetup.image,
+                title: selectedMeetup.title,
+                address: selectedMeetup.address,
+                description: selectedMeetup.description,
+            }
         }
     }
 }
